@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Sistemas/Desktop/EDO/REPOS/BankApp/src/bank/TransactionType.java</file>
-            <file>file:/C:/Users/Sistemas/Desktop/EDO/REPOS/BankApp/src/bank/User.java</file>
-            <file>file:/C:/Users/Sistemas/Desktop/EDO/REPOS/BankApp/src/bank/BankFrame.java</file>
-            <file>file:/C:/Users/Sistemas/Desktop/EDO/REPOS/BankApp/src/bank/Transaction.java</file>
-            <file>file:/C:/Users/Sistemas/Desktop/EDO/REPOS/BankApp/src/bank/Account.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/Transaction.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/TransactionType.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/Account.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/User.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/BankFrame.java</file>
         </group>
     </open-files>
 </project-private>
