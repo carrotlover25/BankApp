@@ -46,8 +46,7 @@ public class AccountStorage {
         return null;
     }
     
-    public ArrayList<Account> getAllAcounts(){
-        this.accounts.sort((a1, a2) -> a1.getId().compareTo(a2.getId()));
-        return this.accounts;
+    public ArrayList<Account> getAllAccounts(){
+        return accounts;
     }
 }

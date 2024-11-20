@@ -6,6 +6,7 @@ package core.views;
 
 import core.controllers.AccountController;
 import core.controllers.TransactionController;
+import static core.controllers.TransactionController.refreshTransactions;
 import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
@@ -79,17 +80,17 @@ public class BankFrame extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        usersTable = new javax.swing.JTable();
         refreshUsers = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        accountsTable = new javax.swing.JTable();
         refreshAccounts = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        transactionTable = new javax.swing.JTable();
         refreshTransactions = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -182,6 +183,12 @@ public class BankFrame extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setText("Initial Balance");
+
+        UserIDField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UserIDFieldActionPerformed(evt);
+            }
+        });
 
         createAccount.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         createAccount.setText("Create");
@@ -321,7 +328,7 @@ public class BankFrame extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel14.setText("List Users");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        usersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -340,7 +347,7 @@ public class BankFrame extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(usersTable);
 
         refreshUsers.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         refreshUsers.setText("Refresh");
@@ -384,7 +391,7 @@ public class BankFrame extends javax.swing.JFrame {
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel15.setText("List Accounts");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        accountsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -403,7 +410,7 @@ public class BankFrame extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable2);
+        jScrollPane3.setViewportView(accountsTable);
 
         refreshAccounts.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         refreshAccounts.setText("Refresh");
@@ -445,7 +452,7 @@ public class BankFrame extends javax.swing.JFrame {
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel16.setText("List Transactions");
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        transactionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -471,7 +478,7 @@ public class BankFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable3);
+        jScrollPane1.setViewportView(transactionTable);
 
         refreshTransactions.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         refreshTransactions.setText("Refresh");
@@ -604,41 +611,37 @@ public class BankFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_makeTransactionActionPerformed
 
     private void refreshUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshUsersActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model = (DefaultTableModel) usersTable.getModel();
         model.setRowCount(0);
-        
-        this.users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
-        
-        for (User user : this.users) {
-            model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
-        }
+        UserController.refreshUsers(model);
     }//GEN-LAST:event_refreshUsersActionPerformed
 
     private void refreshAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAccountsActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.setRowCount(0);
-        
-        this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
-        
-        for (Account account : this.accounts) {
-            model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
+        Response response = AccountController.getAllAccounts();
+        if (response.getStatus() == Status.OK){
+            DefaultTableModel model = (DefaultTableModel) accountsTable.getModel();
+            model.setRowCount(0);
+            ArrayList<Account> accounts = (ArrayList<Account>)response.getObject();
+            for (Account account : accounts ){
+                model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
     }//GEN-LAST:event_refreshAccountsActionPerformed
 
     private void refreshTransactionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTransactionsActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        DefaultTableModel model = (DefaultTableModel) transactionTable.getModel();
         model.setRowCount(0);
-        
-        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
-        Collections.reverse(transactionsCopy);
-        
-        for (Transaction transaction : transactionsCopy) {
-            model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
-        }
+        TransactionController.refreshTransactions(model);
     }//GEN-LAST:event_refreshTransactionsActionPerformed
+
+    private void UserIDFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UserIDFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_UserIDFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -682,6 +685,7 @@ public class BankFrame extends javax.swing.JFrame {
     private javax.swing.JTextField InitialBalanceField;
     private javax.swing.JTextField LastNameField;
     private javax.swing.JTextField UserIDField;
+    private javax.swing.JTable accountsTable;
     private javax.swing.JTextField amountField;
     private javax.swing.JButton createAccount;
     private javax.swing.JTextField destAccField;
@@ -712,14 +716,13 @@ public class BankFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JButton makeTransaction;
     private javax.swing.JButton refreshAccounts;
     private javax.swing.JButton refreshTransactions;
     private javax.swing.JButton refreshUsers;
     private javax.swing.JButton registerUser;
     private javax.swing.JTextField sourceAccField;
+    private javax.swing.JTable transactionTable;
+    private javax.swing.JTable usersTable;
     // End of variables declaration//GEN-END:variables
 }

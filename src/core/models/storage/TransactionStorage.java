@@ -41,6 +41,6 @@ public class TransactionStorage {
         return accountTransactions; 
     }
     public ArrayList<Transaction> getAllTransactions() {
-        return new ArrayList<>(this.transactions); 
+        return this.transactions; 
     }
 }

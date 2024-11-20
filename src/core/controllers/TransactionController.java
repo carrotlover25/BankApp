@@ -11,6 +11,10 @@ import core.models.Transaction;
 import core.models.TransactionType;
 import core.models.storage.AccountStorage;
 import core.models.storage.TransactionStorage;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -97,6 +101,19 @@ public class TransactionController {
             return new Response("Unexpected Error", Status.INTERNAL_SERVER_ERROR);
         }
     
+    }
+    
+    public static void refreshTransactions(DefaultTableModel model){
+        try {
+        TransactionStorage transactionStorage = TransactionStorage.getInstance();
+        ArrayList<Transaction> transactions = transactionStorage.getAllTransactions();
+        Collections.reverse(transactions);
+        for (Transaction transaction : transactions ){
+            model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
+        }
+        } catch (Exception ex){
+            JOptionPane.showMessageDialog(null, "Unexpected error occured", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }

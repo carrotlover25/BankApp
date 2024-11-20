@@ -1,15 +1,17 @@
-  
 package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.User;
+import core.models.storage.AccountStorage;
 import core.models.storage.UserStorage;
+import java.util.ArrayList;
 import java.util.Random;
 
 
 public class AccountController {
+
     public static Response createAccount(String userId, String initialBalance) {
         try {
             int userIdInt;
@@ -24,13 +26,13 @@ public class AccountController {
             }
 
             try {
-            balance = Double.parseDouble(initialBalance);
-            if (balance < 0) {
-                return new Response("Initial balance cannot be negative", Status.BAD_REQUEST);
+                balance = Double.parseDouble(initialBalance);
+                if (balance < 0) {
+                    return new Response("Initial balance cannot be negative", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("Initial balance must be numeric", Status.BAD_REQUEST);
             }
-        } catch (NumberFormatException ex) {
-            return new Response("Initial balance must be numeric", Status.BAD_REQUEST);
-        }
             UserStorage storage = UserStorage.getInstance();
             User user = storage.getUser(userIdInt);
             if (user == null) {
@@ -38,7 +40,7 @@ public class AccountController {
             }
 
             String accountId = generateAccountId();
-            Account account = new Account(accountId, user);
+            Account account = new Account(accountId, user, balance);
             user.addAccount(account);
 
             return new Response("Account created successfully", Status.CREATED);
@@ -48,19 +50,36 @@ public class AccountController {
     }
 
     private static String generateAccountId() {
-        Random rand = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            sb.append(rand.nextInt(10));
-        }
-        sb.append("-");
-        for (int i = 0; i < 6; i++) {
-            sb.append(rand.nextInt(10));
-        }
-        sb.append("-");
-        for (int i = 0; i < 2; i++) {
-            sb.append(rand.nextInt(10));
-        }
-        return sb.toString();
+        Random random = new Random();
+        int first = random.nextInt(1000);
+        int second = random.nextInt(1000000);
+        int third = random.nextInt(100);
+
+        String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
+        return accountId;
     }
+    
+    public static Response getAllAccounts(){
+        try {
+            AccountStorage accountStorage = AccountStorage.getInstance();
+            ArrayList<Account> accounts = accountStorage.getAllAccounts();
+            accounts.sort((acc1, acc2) -> (acc1.getId().compareTo(acc2.getId())));
+            return new Response("OK", Status.OK);
+        } catch (Exception ex){
+            return new Response("An unexpected error occurred.", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+     /** public static void refreshAccounts(DefaultTableModel model) {
+        try {
+            AccountStorage accountStorage = AccountStorage.getInstance();
+            ArrayList<Account> accounts = accountStorage.getAllAccounts();
+            
+            for (Account account : accounts){
+                model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } **/
 }

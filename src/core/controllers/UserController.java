@@ -9,6 +9,10 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.User;
 import core.models.storage.UserStorage;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 
 public class UserController {
@@ -77,6 +81,19 @@ public class UserController {
             return new Response("User found", Status.OK, user);
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    public static void refreshUsers(DefaultTableModel model){
+        try {
+            UserStorage userStorage = UserStorage.getInstance();
+            ArrayList<User> users = userStorage.getAllUsers();
+            users.sort((user1, user2) -> Integer.compare(user1.getId(), user2.getId()));
+            for (User user : users) {
+            model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
+        }
+        } catch (Exception ex){
+            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

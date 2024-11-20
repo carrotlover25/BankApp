@@ -6,10 +6,7 @@
 package core.models;
 import core.models.User;
 
-/**
- *
- * @author mfrey
- */
+
 public class Account {
     private String id;
     private User owner;
