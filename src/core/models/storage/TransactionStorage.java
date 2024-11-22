@@ -26,8 +26,9 @@ public class TransactionStorage {
        return instance;
    }
    
-   public void addTransaction(Transaction transaction){
+   public boolean addTransaction(Transaction transaction){
        this.transactions.add(transaction);
+       return true;
    }
    
    public ArrayList<Transaction> getTransactions(String accountId) {

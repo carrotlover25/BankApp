@@ -12,7 +12,6 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.Transaction;
-import core.models.TransactionType;
 import core.models.User;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -583,7 +582,6 @@ public class BankFrame extends javax.swing.JFrame {
             String destAccID = destAccField.getText();
             String amount = amountField.getText();
             
-            System.out.println("Transaction type selected: " + type); // Debug
             Response response;
             
             switch (type){

@@ -25,7 +25,6 @@ public class Account {
         this.owner = owner;
         this.balance = balance;
         
-        this.owner.addAccount(this);
     }
     
     public String getId() {
@@ -39,16 +38,10 @@ public class Account {
     public double getBalance() {
         return balance;
     }
-    
-    public void deposit(double amount) {
-        this.balance += amount;
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
     
-    public boolean withdraw(double amount) {
-        if (amount > this.balance) {
-            return false;
-        }
-        this.balance -= amount;
-        return true;
-    }
+ 
 }

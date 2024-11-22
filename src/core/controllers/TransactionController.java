@@ -42,7 +42,7 @@ public class TransactionController {
                 return new Response("Destination account not found", Status.BAD_REQUEST);
             }
 
-            destinationAccount.deposit(amountValue);
+            destinationAccount.setBalance(amountValue + destinationAccount.getBalance());
             Transaction transaction = new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amountValue);
             transactionStorage.addTransaction(transaction);
             return new Response("Transaction Successful!", Status.CREATED, transaction);
@@ -68,7 +68,7 @@ public class TransactionController {
                 return new Response("Not enough funds available", Status.BAD_REQUEST);
             }
 
-            sourceAccount.withdraw(amountValue);
+            sourceAccount.setBalance(sourceAccount.getBalance() - amountValue);
             Transaction transaction = new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amountValue);
             transactionStorage.addTransaction(transaction);
             return new Response("Transaction Successful!", Status.CREATED, transaction);
@@ -104,8 +104,8 @@ public class TransactionController {
                 return new Response("Not enough funds available", Status.BAD_REQUEST);
             }
 
-            sourceAccount.withdraw(amountValue);
-            destAccount.deposit(amountValue);
+            sourceAccount.setBalance(sourceAccount.getBalance() - amountValue);
+            destAccount.setBalance(amountValue + destAccount.getBalance());
 
             Transaction transaction = new Transaction(TransactionType.TRANSFER, sourceAccount, destAccount, amountValue);
             transactionStorage.addTransaction(transaction);
