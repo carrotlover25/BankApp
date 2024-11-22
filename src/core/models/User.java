@@ -13,7 +13,7 @@ import core.models.Account;
  * @author mfrey
  */
 public class User {
-     private int id;
+    private int id;
     private String firstname;
     private String lastname;
     private int age;
@@ -42,18 +42,16 @@ public class User {
     public int getAge() {
         return age;
     }
-    
-    public int getNumAccounts() {
-        return this.accounts.size();
+
+    public void addAccount(Account account) {
+        this.accounts.add(account);
     }
 
     public ArrayList<Account> getAccounts() {
         return accounts;
     }
-    
-   
-    
-    public void addAccount(Account account) {
-        this.accounts.add(account);
+
+    public Object getNumAccounts() {
+        return this.accounts.size();
     }
 }

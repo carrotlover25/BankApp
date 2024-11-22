@@ -12,6 +12,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.Transaction;
+import core.models.TransactionType;
 import core.models.User;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -582,16 +583,17 @@ public class BankFrame extends javax.swing.JFrame {
             String destAccID = destAccField.getText();
             String amount = amountField.getText();
             
+            System.out.println("Transaction type selected: " + type); // Debug
             Response response;
             
             switch (type){
-                case "DEPOSIT":
+                case "Deposit":
                     response = TransactionController.deposit(destAccID, amount);
                     break;
-                case "WITHDRAW":
-                    response = TransactionController.deposit(sourceAccID, amount);
+                case "Withdraw":
+                    response = TransactionController.withdraw(sourceAccID, amount);
                     break;
-                case "TRANSFER":
+                case "Transfer":
                     response = TransactionController.transfer(sourceAccID, destAccID, amount);
                     break;
                 default:

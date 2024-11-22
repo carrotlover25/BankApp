@@ -9,11 +9,11 @@ package core.models;
  * @author mfrey
  */
 public class Transaction {
-    private TransactionType type;
+   private TransactionType type;
     private Account sourceAccount;
     private Account destinationAccount;
     private double amount;
-    
+
     public Transaction(TransactionType type, Account sourceAccount, Account destinationAccount, double amount) {
         this.type = type;
         this.sourceAccount = sourceAccount;
@@ -36,5 +36,7 @@ public class Transaction {
     public double getAmount() {
         return amount;
     }
-    
 }
+    
+    
+

@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TransactionController {
 
-    public static Response deposit(String destinationAcc, String amount) {
+     public static Response deposit(String destinationAcc, String amount) {
         try {
             double amountValue;
             try {
@@ -30,22 +30,22 @@ public class TransactionController {
                 if (amountValue <= 0) {
                     return new Response("Amount needs to be greater than zero.", Status.BAD_REQUEST);
                 }
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 return new Response("Amount must be numeric", Status.BAD_REQUEST);
             }
+
             AccountStorage accountStorage = AccountStorage.getInstance();
             TransactionStorage transactionStorage = TransactionStorage.getInstance();
             Account destinationAccount = accountStorage.getAccount(destinationAcc);
+
             if (destinationAccount == null) {
                 return new Response("Destination account not found", Status.BAD_REQUEST);
             }
-            if (amountValue <= 0) {
-                return new Response("Amount must be greater than 0", Status.BAD_REQUEST);
-            }
+
             destinationAccount.deposit(amountValue);
             Transaction transaction = new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amountValue);
             transactionStorage.addTransaction(transaction);
-            return new Response("Transaction Succesfull!!", Status.CREATED, transaction);
+            return new Response("Transaction Successful!", Status.CREATED, transaction);
         } catch (Exception ex) {
             return new Response("Unexpected Error", Status.INTERNAL_SERVER_ERROR);
         }
@@ -55,21 +55,25 @@ public class TransactionController {
         try {
             AccountStorage accountStorage = AccountStorage.getInstance();
             TransactionStorage transactionStorage = TransactionStorage.getInstance();
-
             Account sourceAccount = accountStorage.getAccount(sourceAcc);
+
             if (sourceAccount == null) {
                 return new Response("Account not found.", Status.NOT_FOUND);
             }
+
             double amountValue = Double.parseDouble(amount);
             if (amountValue <= 0) {
                 return new Response("Value needs to be greater than 0.", Status.BAD_REQUEST);
             } else if (amountValue > sourceAccount.getBalance()) {
                 return new Response("Not enough funds available", Status.BAD_REQUEST);
             }
+
             sourceAccount.withdraw(amountValue);
             Transaction transaction = new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amountValue);
             transactionStorage.addTransaction(transaction);
-            return new Response("Transaction Succesfull!!", Status.CREATED, transaction);
+            return new Response("Transaction Successful!", Status.CREATED, transaction);
+        } catch (NumberFormatException ex) {
+            return new Response("Amount must be numeric", Status.BAD_REQUEST);
         } catch (Exception ex) {
             return new Response("Unexpected Error", Status.INTERNAL_SERVER_ERROR);
         }
@@ -79,41 +83,50 @@ public class TransactionController {
         try {
             AccountStorage accountStorage = AccountStorage.getInstance();
             TransactionStorage transactionStorage = TransactionStorage.getInstance();
+
             Account sourceAccount = accountStorage.getAccount(sourceAcc);
             Account destAccount = accountStorage.getAccount(destAcc);
-            if (sourceAccount == null && destAccount == null) {
-                return new Response("Accounts cannot be empty", Status.NOT_FOUND);
+
+            if (sourceAccount == null || destAccount == null) {
+                return new Response("Source or destination account not found", Status.NOT_FOUND);
             }
+
+            if (sourceAccount.equals(destAccount)) {
+                return new Response("Source and destination accounts must be different", Status.BAD_REQUEST);
+            }
+
             double amountValue = Double.parseDouble(amount);
             if (amountValue <= 0) {
                 return new Response("Amount must be greater than 0", Status.BAD_REQUEST);
             }
+
             if (sourceAccount.getBalance() < amountValue) {
                 return new Response("Not enough funds available", Status.BAD_REQUEST);
             }
+
             sourceAccount.withdraw(amountValue);
             destAccount.deposit(amountValue);
+
             Transaction transaction = new Transaction(TransactionType.TRANSFER, sourceAccount, destAccount, amountValue);
             transactionStorage.addTransaction(transaction);
-            return new Response("Transaction Successfull!", Status.CREATED);
-
+            return new Response("Transaction Successful!", Status.CREATED);
+        } catch (NumberFormatException ex) {
+            return new Response("Amount must be numeric", Status.BAD_REQUEST);
         } catch (Exception ex) {
             return new Response("Unexpected Error", Status.INTERNAL_SERVER_ERROR);
         }
-    
-    }
-    
-    public static void refreshTransactions(DefaultTableModel model){
-        try {
-        TransactionStorage transactionStorage = TransactionStorage.getInstance();
-        ArrayList<Transaction> transactions = transactionStorage.getAllTransactions();
-        Collections.reverse(transactions);
-        for (Transaction transaction : transactions ){
-            model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
-        }
-        } catch (Exception ex){
-            JOptionPane.showMessageDialog(null, "Unexpected error occured", "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
+    public static void refreshTransactions(DefaultTableModel model) {
+        try {
+            TransactionStorage transactionStorage = TransactionStorage.getInstance();
+            ArrayList<Transaction> transactions = transactionStorage.getAllTransactions();
+            Collections.reverse(transactions);
+            for (Transaction transaction : transactions) {
+                model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Unexpected error occurred", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

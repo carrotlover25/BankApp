@@ -8,12 +8,14 @@ import core.models.storage.AccountStorage;
 import core.models.storage.UserStorage;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 public class AccountController {
 
     public static Response createAccount(String userId, String initialBalance) {
-        try {
+        try {   
             int userIdInt;
             double balance;
             try {
@@ -42,10 +44,12 @@ public class AccountController {
             String accountId = generateAccountId();
             Account account = new Account(accountId, user, balance);
             user.addAccount(account);
+            
+            AccountStorage.getInstance().addAccount(account);
 
             return new Response("Account created successfully", Status.CREATED);
         } catch (Exception ex) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+            return new Response("Unexpected error: " + ex.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -59,27 +63,37 @@ public class AccountController {
         return accountId;
     }
     
-    public static Response getAllAccounts(){
+    public static Response getAllAccounts() {
         try {
             AccountStorage accountStorage = AccountStorage.getInstance();
             ArrayList<Account> accounts = accountStorage.getAllAccounts();
-            accounts.sort((acc1, acc2) -> (acc1.getId().compareTo(acc2.getId())));
-            return new Response("OK", Status.OK);
-        } catch (Exception ex){
-            return new Response("An unexpected error occurred.", Status.INTERNAL_SERVER_ERROR);
+            if (accounts.isEmpty()) {
+                return new Response("No accounts found", Status.NOT_FOUND);
+            }
+
+            accounts.sort((acc1, acc2) -> acc1.getId().compareTo(acc2.getId()));
+
+            return new Response("Accounts retrieved successfully", Status.OK, accounts);  // Devolver las cuentas en la respuesta
+        } catch (Exception ex) {
+            return new Response("An unexpected error occurred: " + ex.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
 
-     /** public static void refreshAccounts(DefaultTableModel model) {
+    public static void refreshAccounts(DefaultTableModel model) {
         try {
             AccountStorage accountStorage = AccountStorage.getInstance();
             ArrayList<Account> accounts = accountStorage.getAllAccounts();
-            
-            for (Account account : accounts){
+
+            if (accounts == null || accounts.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No accounts to display", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            model.setRowCount(0);
+            for (Account account : accounts) {
                 model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } **/
+    }
 }
