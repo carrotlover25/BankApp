@@ -4,10 +4,7 @@
  */
 package core.models;
 
-/**
- *
- * @author mfrey
- */
+
 public enum TransactionType {
     DEPOSIT,
     WITHDRAW,

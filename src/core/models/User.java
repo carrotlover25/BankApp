@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import core.models.Account;
 
 
-/**
- *
- * @author mfrey
- */
+
 public class User {
     private int id;
     private String firstname;

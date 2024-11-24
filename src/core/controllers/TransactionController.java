@@ -11,10 +11,6 @@ import core.models.Transaction;
 import core.models.TransactionType;
 import core.models.storage.AccountStorage;
 import core.models.storage.TransactionStorage;
-import java.util.ArrayList;
-import java.util.Collections;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -28,10 +24,10 @@ public class TransactionController {
             try {
                 amountValue = Double.parseDouble(amount);
                 if (amountValue <= 0) {
-                    return new Response("Amount needs to be greater than zero.", Status.BAD_REQUEST);
+                    return new Response("Amount needs to be greater than 0", Status.BAD_REQUEST);
                 }
             } catch (NumberFormatException ex) {
-                return new Response("Amount must be numeric", Status.BAD_REQUEST);
+                return new Response("Type numbers only", Status.BAD_REQUEST);
             }
 
             AccountStorage accountStorage = AccountStorage.getInstance();
@@ -58,12 +54,12 @@ public class TransactionController {
             Account sourceAccount = accountStorage.getAccount(sourceAcc);
 
             if (sourceAccount == null) {
-                return new Response("Account not found.", Status.NOT_FOUND);
+                return new Response("Account not found", Status.NOT_FOUND);
             }
 
             double amountValue = Double.parseDouble(amount);
             if (amountValue <= 0) {
-                return new Response("Value needs to be greater than 0.", Status.BAD_REQUEST);
+                return new Response("Amount needs to be greater than 0", Status.BAD_REQUEST);
             } else if (amountValue > sourceAccount.getBalance()) {
                 return new Response("Not enough funds available", Status.BAD_REQUEST);
             }
@@ -73,7 +69,7 @@ public class TransactionController {
             transactionStorage.addTransaction(transaction);
             return new Response("Transaction Successful!", Status.CREATED, transaction);
         } catch (NumberFormatException ex) {
-            return new Response("Amount must be numeric", Status.BAD_REQUEST);
+            return new Response("Amount must be a number", Status.BAD_REQUEST);
         } catch (Exception ex) {
             return new Response("Unexpected Error", Status.INTERNAL_SERVER_ERROR);
         }
@@ -111,22 +107,10 @@ public class TransactionController {
             transactionStorage.addTransaction(transaction);
             return new Response("Transaction Successful!", Status.CREATED);
         } catch (NumberFormatException ex) {
-            return new Response("Amount must be numeric", Status.BAD_REQUEST);
+            return new Response("Amount must be a number", Status.BAD_REQUEST);
         } catch (Exception ex) {
             return new Response("Unexpected Error", Status.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public static void refreshTransactions(DefaultTableModel model) {
-        try {
-            TransactionStorage transactionStorage = TransactionStorage.getInstance();
-            ArrayList<Transaction> transactions = transactionStorage.getAllTransactions();
-            Collections.reverse(transactions);
-            for (Transaction transaction : transactions) {
-                model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Unexpected error occurred", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 }

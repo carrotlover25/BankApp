@@ -29,7 +29,7 @@ public class UserStorage {
      return instance;
     }
     
-    public boolean addUser(User user){ //añadir user
+    public boolean addUser(User user){ 
         for (User u : this.users){
             if (u.getId() == user.getId()){
                 return false;
@@ -39,7 +39,7 @@ public class UserStorage {
         return true;
     }
     
-    public User getUser(int id){ // obtener user
+    public User getUser(int id){ 
         for (User user : this.users){
             if (user.getId() == id){
                 return user;

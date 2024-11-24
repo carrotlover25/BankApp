@@ -6,13 +6,14 @@ package core.views;
 
 import core.controllers.AccountController;
 import core.controllers.TransactionController;
-import static core.controllers.TransactionController.refreshTransactions;
 import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.Transaction;
 import core.models.User;
+import core.models.storage.TransactionStorage;
+import core.models.storage.UserStorage;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JOptionPane;
@@ -613,7 +614,16 @@ public class BankFrame extends javax.swing.JFrame {
     private void refreshUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshUsersActionPerformed
         DefaultTableModel model = (DefaultTableModel) usersTable.getModel();
         model.setRowCount(0);
-        UserController.refreshUsers(model);
+        try {
+            UserStorage userStorage = UserStorage.getInstance();
+            ArrayList<User> users = userStorage.getAllUsers();
+            users.sort((user1, user2) -> Integer.compare(user1.getId(), user2.getId()));
+            for (User user : users) {
+            model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
+        }
+        } catch (Exception ex){
+            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_refreshUsersActionPerformed
 
     private void refreshAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAccountsActionPerformed
@@ -636,7 +646,16 @@ public class BankFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) transactionTable.getModel();
         model.setRowCount(0);
-        TransactionController.refreshTransactions(model);
+        try {
+            TransactionStorage transactionStorage = TransactionStorage.getInstance();
+            ArrayList<Transaction> transactions = transactionStorage.getAllTransactions();
+            Collections.reverse(transactions);
+            for (Transaction transaction : transactions) {
+                model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Unexpected error occurred", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_refreshTransactionsActionPerformed
 
     private void UserIDFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UserIDFieldActionPerformed

@@ -8,8 +8,7 @@ import core.models.storage.AccountStorage;
 import core.models.storage.UserStorage;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+
 
 
 public class AccountController {
@@ -23,8 +22,9 @@ public class AccountController {
                 if (userIdInt < 0 || userIdInt > 999999999) {
                     return new Response("ID must have between 1 and 9 digits", Status.BAD_REQUEST);
                 }
+                
             } catch (NumberFormatException ex) {
-                return new Response("ID must be numeric", Status.BAD_REQUEST);
+                return new Response("Type numbers only", Status.BAD_REQUEST);
             }
 
             try {
@@ -33,7 +33,7 @@ public class AccountController {
                     return new Response("Initial balance cannot be negative", Status.BAD_REQUEST);
                 }
             } catch (NumberFormatException ex) {
-                return new Response("Initial balance must be numeric", Status.BAD_REQUEST);
+                return new Response("Type numbers only", Status.BAD_REQUEST);
             }
             UserStorage storage = UserStorage.getInstance();
             User user = storage.getUser(userIdInt);
@@ -79,21 +79,5 @@ public class AccountController {
         }
     }
 
-    public static void refreshAccounts(DefaultTableModel model) {
-        try {
-            AccountStorage accountStorage = AccountStorage.getInstance();
-            ArrayList<Account> accounts = accountStorage.getAllAccounts();
-
-            if (accounts == null || accounts.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No accounts to display", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            model.setRowCount(0);
-            for (Account account : accounts) {
-                model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+   
 }

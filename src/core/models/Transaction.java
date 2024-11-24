@@ -4,10 +4,7 @@
  */
 package core.models;
 
-/**
- *
- * @author mfrey
- */
+
 public class Transaction {
    private TransactionType type;
     private Account sourceAccount;
