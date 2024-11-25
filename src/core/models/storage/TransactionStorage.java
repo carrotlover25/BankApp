@@ -4,7 +4,8 @@
  */
 package core.models.storage;
 
-import core.models.Transaction;
+
+import core.models.transaction.Transaction;
 import java.util.ArrayList;
 
 /**

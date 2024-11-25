@@ -10,7 +10,7 @@ import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
-import core.models.Transaction;
+import core.models.transaction.Transaction;
 import core.models.User;
 import core.models.storage.TransactionStorage;
 import core.models.storage.UserStorage;
@@ -570,6 +570,8 @@ public class BankFrame extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        UserIDField.setText("");
+        InitialBalanceField.setText("");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -593,10 +595,10 @@ public class BankFrame extends javax.swing.JFrame {
                     response = TransactionController.withdraw(sourceAccID, amount);
                     break;
                 case "Transfer":
-                    response = TransactionController.transfer(sourceAccID, destAccID, amount);
+                    response = TransactionController.transfer(destAccID, sourceAccID, amount);
                     break;
                 default:
-                    response = new Response("Transaction type invalid", Status.BAD_REQUEST);
+                    response = new Response("Transaction invalid", Status.BAD_REQUEST);
             }
             if (response.getStatus() == Status.CREATED){
                 JOptionPane.showMessageDialog(null, "Transaction Successfull!", "Success!", JOptionPane.INFORMATION_MESSAGE);
@@ -651,7 +653,10 @@ public class BankFrame extends javax.swing.JFrame {
             ArrayList<Transaction> transactions = transactionStorage.getAllTransactions();
             Collections.reverse(transactions);
             for (Transaction transaction : transactions) {
-                model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
+                model.addRow(new Object[]{transaction.getType(), 
+                    transaction.getSourceAccount(), 
+                    transaction.getDestinationAccount(), 
+                    transaction.getAmount()});
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Unexpected error occurred", "Error", JOptionPane.ERROR_MESSAGE);

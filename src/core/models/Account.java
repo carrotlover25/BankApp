@@ -41,5 +41,16 @@ public class Account {
         this.balance = balance;
     }
     
+    public void deposit(double amount) {
+        this.balance += amount;
+    }
+    
+    public boolean withdraw(double amount) {
+        if (amount > this.balance) {
+            return false;
+        }
+        this.balance -= amount;
+        return true;
+    }
  
 }

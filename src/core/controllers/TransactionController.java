@@ -7,10 +7,13 @@ package core.controllers;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
-import core.models.Transaction;
-import core.models.TransactionType;
+
 import core.models.storage.AccountStorage;
 import core.models.storage.TransactionStorage;
+import core.models.transaction.Deposit;
+import core.models.transaction.Transaction;
+import core.models.transaction.Transfer;
+import core.models.transaction.Withdraw;
 
 /**
  *
@@ -37,9 +40,9 @@ public class TransactionController {
             if (destinationAccount == null) {
                 return new Response("Destination account not found", Status.BAD_REQUEST);
             }
-
-            destinationAccount.setBalance(amountValue + destinationAccount.getBalance());
-            Transaction transaction = new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amountValue);
+            
+            Transaction transaction = new Deposit(null, destinationAccount, amountValue);
+            transaction.makeTransaction();
             transactionStorage.addTransaction(transaction);
             return new Response("Transaction Successful!", Status.CREATED, transaction);
         } catch (Exception ex) {
@@ -64,8 +67,8 @@ public class TransactionController {
                 return new Response("Not enough funds available", Status.BAD_REQUEST);
             }
 
-            sourceAccount.setBalance(sourceAccount.getBalance() - amountValue);
-            Transaction transaction = new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amountValue);
+            Transaction transaction = new Withdraw(sourceAccount, null, amountValue);
+            transaction.makeTransaction();
             transactionStorage.addTransaction(transaction);
             return new Response("Transaction Successful!", Status.CREATED, transaction);
         } catch (NumberFormatException ex) {
@@ -100,10 +103,8 @@ public class TransactionController {
                 return new Response("Not enough funds available", Status.BAD_REQUEST);
             }
 
-            sourceAccount.setBalance(sourceAccount.getBalance() - amountValue);
-            destAccount.setBalance(amountValue + destAccount.getBalance());
-
-            Transaction transaction = new Transaction(TransactionType.TRANSFER, sourceAccount, destAccount, amountValue);
+            Transaction transaction = new Transfer(sourceAccount, destAccount, amountValue);
+            transaction.makeTransaction();
             transactionStorage.addTransaction(transaction);
             return new Response("Transaction Successful!", Status.CREATED);
         } catch (NumberFormatException ex) {
