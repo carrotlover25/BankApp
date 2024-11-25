@@ -23,12 +23,8 @@ public class Transfer extends Transaction {
 
     @Override
     public void makeTransaction() {
-       // if (sourceAccount.getBalance() >= amount){
         sourceAccount.withdraw(amount);
-        destinationAccount.deposit(amount);   
-       // }
-        
-        
+        destinationAccount.deposit(amount);      
     }
 
    
