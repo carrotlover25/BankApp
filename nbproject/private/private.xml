@@ -5,22 +5,24 @@
         <group>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/Account.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/Transaction.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/transaction/Withdraw.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/storage/UserStorage.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/Account.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/controllers/utils/Response.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/transaction/Transfer.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/User.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/controllers/UserController.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/storage/TransactionStorage.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/transaction/Deposit.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/TransactionType.java</file>
-            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/user/AccountHandler.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/storage/AccountStorage.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/views/BankFrame.java</file>
-            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/Transaction.java</file>
-            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/user/User.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/controllers/utils/Status.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/controllers/TransactionController.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/User.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/main/Main.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/controllers/AccountController.java</file>
-            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/TransactionType.java</file>
+            <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/core/models/transaction/Transaction.java</file>
             <file>file:/C:/Users/mfrey/OneDrive/Documents/NetBeansProjects/BankApp/src/bank/BankFrame.java</file>
         </group>
     </open-files>
